@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mergington High School - Login</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .auth-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      .message {
+        margin-bottom: 20px;
+        padding: 12px;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .tab-button {
+        flex: 1;
+        padding: 12px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        transition: all 0.3s;
+      }
+
+      .tab-button.active {
+        border-bottom-color: #4CAF50;
+        color: #4CAF50;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .toggle-link {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .toggle-link a {
+        color: #4CAF50;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Mergington High School</h1>
+      <h2>Activity Management System</h2>
+    </header>
+
+    <main>
+      <div class="auth-container">
+        <div class="tabs">
+          <button class="tab-button active" onclick="switchTab('login')">Login</button>
+          <button class="tab-button" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Login Tab -->
+        <div id="login" class="tab-content active">
+          <h3>Login</h3>
+          <div id="login-message" class="message hidden"></div>
+          <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label for="login-email">Email:</label>
+              <input
+                type="email"
+                id="login-email"
+                required
+                placeholder="student@mergington.edu"
+              />
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password:</label>
+              <input
+                type="password"
+                id="login-password"
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register" class="tab-content">
+          <h3>Create Account</h3>
+          <div id="register-message" class="message hidden"></div>
+          <form id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+              <label for="register-email">Email:</label>
+              <input
+                type="email"
+                id="register-email"
+                required
+                placeholder="student@mergington.edu"
+              />
+            </div>
+            <div class="form-group">
+              <label for="register-name">Full Name:</label>
+              <input
+                type="text"
+                id="register-name"
+                required
+                placeholder="John Doe"
+              />
+            </div>
+            <div class="form-group">
+              <label for="register-password">Password:</label>
+              <input
+                type="password"
+                id="register-password"
+                required
+                placeholder="Create a password (min 8 chars)"
+                minlength="8"
+              />
+            </div>
+            <div class="form-group">
+              <label for="register-password-confirm">Confirm Password:</label>
+              <input
+                type="password"
+                id="register-password-confirm"
+                required
+                placeholder="Confirm your password"
+              />
+            </div>
+            <button type="submit">Register</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Mergington High School</p>
+    </footer>
+
+    <script>
+      // Switch between tabs
+      function switchTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        // Show selected tab
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+      }
+
+      // Handle login
+      async function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const messageDiv = document.getElementById('login-message');
+
+        try {
+          const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            messageDiv.classList.remove('error');
+            messageDiv.classList.add('success');
+            messageDiv.textContent = `Welcome ${data.full_name}! Redirecting...`;
+            setTimeout(() => {
+              window.location.href = '/static/index.html';
+            }, 1500);
+          } else {
+            messageDiv.classList.add('error');
+            messageDiv.classList.remove('success');
+            messageDiv.textContent = data.detail || 'Login failed';
+          }
+        } catch (error) {
+          messageDiv.classList.add('error');
+          messageDiv.textContent = 'Error connecting to server';
+        }
+        messageDiv.classList.remove('hidden');
+      }
+
+      // Handle registration
+      async function handleRegister(event) {
+        event.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const fullName = document.getElementById('register-name').value;
+        const password = document.getElementById('register-password').value;
+        const passwordConfirm = document.getElementById('register-password-confirm').value;
+        const messageDiv = document.getElementById('register-message');
+
+        // Validate passwords match
+        if (password !== passwordConfirm) {
+          messageDiv.classList.add('error');
+          messageDiv.textContent = 'Passwords do not match';
+          messageDiv.classList.remove('hidden');
+          return;
+        }
+
+        try {
+          const response = await fetch('/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email,
+              full_name: fullName,
+              password
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            messageDiv.classList.remove('error');
+            messageDiv.classList.add('success');
+            messageDiv.textContent = `Account created! Logging you in...`;
+            
+            // Auto-login after registration
+            setTimeout(() => {
+              document.getElementById('login-email').value = email;
+              document.getElementById('login-password').value = password;
+              document.getElementById('login-form').dispatchEvent(new Event('submit'));
+            }, 1000);
+          } else {
+            messageDiv.classList.add('error');
+            messageDiv.classList.remove('success');
+            messageDiv.textContent = data.detail || 'Registration failed';
+          }
+        } catch (error) {
+          messageDiv.classList.add('error');
+          messageDiv.textContent = 'Error connecting to server';
+        }
+        messageDiv.classList.remove('hidden');
+      }
+    </script>
+  </body>
+</html>
